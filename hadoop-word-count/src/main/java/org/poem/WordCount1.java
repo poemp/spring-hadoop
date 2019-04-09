@@ -38,7 +38,7 @@ public class WordCount1 {
 
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            String[] words = value.toString().split(" ");
+            String[] words = value.toString().split("");
             for (String str : words) {
                 word.set(str);
                 context.write(word, one);
