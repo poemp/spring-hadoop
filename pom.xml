@@ -6,6 +6,7 @@
     <modules>
         <module>hadoop-word-count</module>
         <module>hadoop-hdfs</module>
+        <module>hadoop-writable</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

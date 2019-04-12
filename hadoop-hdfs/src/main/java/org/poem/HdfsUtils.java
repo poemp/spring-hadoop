@@ -9,20 +9,24 @@ import org.apache.hadoop.fs.Path;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.UUID;
+
 public class HdfsUtils {
 
     private static final String UTF_8 = "UTF-8";
 
+    private static final String DICT = "/test";
     /**
      * 上传本地文件到 HDFS
      * @param source
-     * @param dest
      */
-    public static void uploadFile(String source, String dest) throws IOException {
+    public static void uploadFile(String source) throws IOException {
         Configuration configuration = new Configuration();
         configuration.set("fs.defaultFS", "hdfs://192.168.24.227:9000");
         configuration.set("fs.hdfs.impl","org.apache.hadoop.hdfs.DistributedFileSystem");
-        Path sourcePath = new Path(source);
+        configuration.set("dfs.client.use.datanode.hostname", "true");
+        String file =  UUID.randomUUID().toString();
+        String dest = DICT +"/"+ file;
         Path destPath = new Path(dest);
         FileSystem fileSystem = null;
         FSDataOutputStream outputStream = null;
@@ -35,7 +39,7 @@ public class HdfsUtils {
                 fileSystem.mkdirs(destPath);
             }
             String filename = source.substring(source.lastIndexOf('/') + 1);
-            outputStream = fileSystem.append(destPath);
+            outputStream = fileSystem.create(new Path(dest + "/" + file));
             outputStream.getWrappedStream().write(IOUtils.toByteArray(new FileInputStream(new File(source))));
             System.out.println("File " + filename + " copied to " + dest);
 
@@ -52,6 +56,6 @@ public class HdfsUtils {
     }
 
     public static void main(String[] args) throws IOException {
-        uploadFile("C:\\Users\\Administrator\\Desktop\\test.txt","/test");
+        uploadFile("C:\\Users\\Administrator\\Desktop\\test.txt");
     }
 }
