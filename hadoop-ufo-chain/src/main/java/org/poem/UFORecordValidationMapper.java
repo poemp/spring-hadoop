@@ -9,6 +9,9 @@ import org.apache.hadoop.mapred.Reporter;
 
 import java.io.IOException;
 
+/**
+ * @author Administrator
+ */
 public class UFORecordValidationMapper extends MapReduceBase implements Mapper<LongWritable, Text, LongWritable, Text> {
     @Override
     public void map(LongWritable longWritable, Text text, OutputCollector<LongWritable, Text> outputCollector, Reporter reporter) throws IOException {
