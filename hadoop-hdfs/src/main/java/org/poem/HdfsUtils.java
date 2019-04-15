@@ -23,7 +23,7 @@ public class HdfsUtils {
     public static void uploadFile(String source) throws IOException {
         Configuration configuration = new Configuration();
         configuration.set("fs.defaultFS", "hdfs://192.168.24.227:9000");
-        configuration.set("fs.hdfs.impl","org.apache.hadoop.hdfs.DistributedFileSystem");
+//        configuration.set("fs.hdfs.impl","org.apache.hadoop.hdfs.DistributedFileSystem");
         configuration.set("dfs.client.use.datanode.hostname", "true");
         String file =  UUID.randomUUID().toString();
         String dest = DICT +"/"+ file;

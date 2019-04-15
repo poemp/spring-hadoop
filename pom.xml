@@ -8,6 +8,7 @@
         <module>hadoop-hdfs</module>
         <module>hadoop-writable</module>
         <module>hadoop-hive</module>
+        <module>hadoop-ufo-chain</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
