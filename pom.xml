@@ -10,6 +10,7 @@
         <module>hadoop-hive</module>
         <module>hadoop-ufo-chain</module>
         <module>hadoop-ufo-chain-counting</module>
+        <module>hadoop-meltiple-input</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

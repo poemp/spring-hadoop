@@ -27,27 +27,28 @@ public class AbstractDataBaseInterTest {
 
     @Test
     public void getDateBaseName() {
-        Connection connection =  hiveDataConfig.getDataBaseS().getConnect();
+        Connection connection = hiveDataConfig.getDataBaseS().getConnect();
         PreparedStatement statement = null;
         String tableName = "sort_cols_1555054428609";
         try {
 //            String sql = "CREATE TABLE " + tableName +"(\n" +
 //                    "SD_ID int  NOT NULL comment 'test' \n" +
 //                    ")";
-//            statement = connection.prepareStatement(sql);
+//            statemehant = connection.prepareStatement(sql);
 //            boolean r = statement.execute();
 //            System.out.println(r);
-            String sql = "INSERT  INTO " + tableName + " (SD_ID ) VALUES (?)";
+
 //            for (int i = 0; i < 1000; i++) {
-                statement = connection.prepareStatement(sql);
-                statement.setInt(1, 23);
-                statement.executeUpdate();
+            String sql = "INSERT INTO " + tableName + " VALUES (" + 23 + ")";
+            System.out.println(sql);
+            statement = connection.prepareStatement(sql);
+            statement.executeUpdate();
 //            }
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            if (statement != null){
+        } finally {
+            if (statement != null) {
                 try {
                     statement.close();
                 } catch (SQLException e) {
