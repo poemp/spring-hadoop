@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.UUID;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -28,14 +29,20 @@ public class AbstractDataBaseInterTest {
     public void getDateBaseName() {
         Connection connection =  hiveDataConfig.getDataBaseS().getConnect();
         PreparedStatement statement = null;
+        String tableName = "sort_cols_1555054428609";
         try {
-            String sql = "CREATE TABLE SORT_COLS_" + System.currentTimeMillis() +"(\n" +
-                    "SD_ID int  NOT NULL \n" +
-                    ")";
-            System.out.println(sql);
-            statement = connection.prepareStatement(sql);
-            boolean r = statement.execute();
-            System.out.println(r);
+//            String sql = "CREATE TABLE " + tableName +"(\n" +
+//                    "SD_ID int  NOT NULL comment 'test' \n" +
+//                    ")";
+//            statement = connection.prepareStatement(sql);
+//            boolean r = statement.execute();
+//            System.out.println(r);
+            String sql = "INSERT  INTO " + tableName + " (SD_ID ) VALUES (?)";
+//            for (int i = 0; i < 1000; i++) {
+                statement = connection.prepareStatement(sql);
+                statement.setInt(1, 23);
+                statement.executeUpdate();
+//            }
 
         } catch (SQLException e) {
             e.printStackTrace();
