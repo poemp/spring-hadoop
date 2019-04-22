@@ -31,15 +31,15 @@ public class AbstractDataBaseInterTest {
         PreparedStatement statement = null;
         String tableName = "sort_cols_1555054428609";
         try {
-//            String sql = "CREATE TABLE " + tableName +"(\n" +
-//                    "SD_ID int  NOT NULL comment 'test' \n" +
-//                    ")";
-//            statemehant = connection.prepareStatement(sql);
-//            boolean r = statement.execute();
-//            System.out.println(r);
+            String sql = "CREATE TABLE " + tableName +"(\n" +
+                   "SD_ID int  NOT NULL comment 'test' \n" +
+                   ")";
+//            statement = connection.prepareStatement(sql);
+//           boolean r = statement.execute();
+//           System.out.println(r);
 
 //            for (int i = 0; i < 1000; i++) {
-            String sql = "INSERT INTO " + tableName + " VALUES (" + 23 + ")";
+            sql = "INSERT INTO " + tableName + " VALUES (" + 9999991 + ")";
             System.out.println(sql);
             statement = connection.prepareStatement(sql);
             statement.executeUpdate();
