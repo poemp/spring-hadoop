@@ -12,7 +12,7 @@
     <artifactId>hadoop-hive</artifactId>
 
     <properties>
-        <hive.version>1.2.1</hive.version>
+        <hive.version>2.3.4</hive.version>
         <spring-data-hadoop.version>2.5.0.RELEASE</spring-data-hadoop.version>
     </properties>
 
