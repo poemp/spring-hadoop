@@ -15,16 +15,22 @@ class Recommend {
     Logger.getGlobal.setLevel(Level.OFF)
   }
 
-  def recommend(modle:MatrixFactorizationModel,movieTitle:Map[Int, String]): Unit ={
+  /**
+    * 推荐代码
+    *
+    * @param modle
+    * @param movieTitle
+    */
+  def recommend(modle: MatrixFactorizationModel, movieTitle: Map[Int, String]): Unit = {
     setLogger
     var choose = ""
-    while (choose != "3"){
+    while (choose != "3") {
       choose = scala.io.StdIn.readLine()
-      if (choose == "1"){
+      if (choose == "1") {
         println("请输入用户id:")
         val inputUserId = scala.io.StdIn.readLine()
         //RecommendMovies(modle, movieTitle, inputUserId.toInt)
-      }else if (choose == "2"){
+      } else if (choose == "2") {
         println("请输入电影的id:")
         val inputMovieId = scala.io.StdIn.readLine()
         //RecommonUsers(modle, movieTitle, inputMovieId.toInt)
@@ -34,9 +40,10 @@ class Recommend {
 
   /**
     * 准备数据
+    *
     * @return
     */
-  def PrepareData(): (RDD[Rating], Map[Int, String]) ={
+  def PrepareData(): (RDD[Rating], Map[Int, String]) = {
     // ---------------- 1. 创建用户评分数据 --------------
     val sc = new SparkContext(new SparkConf().setAppName("wordCount").setMaster("local[4]"))
     println("开始读取文件")
@@ -58,7 +65,24 @@ class Recommend {
     val numRatings = rawRatings.count()
     val numUsers = rawRatings.map(_.user).distinct().count()
     val numMovies = rawRatings.map(_.product).distinct().count()
-    println(" 共计："+numRatings.toString + " user: " + numUsers.toString + "movies:" + numMovies )
+    println(" 共计：" + numRatings.toString + " user: " + numUsers.toString + "movies:" + numMovies)
     (rawRatings, moviesRDD)
+  }
+
+
+  /**
+    * 推荐电影
+    *
+    * @param modle
+    * @param movieTitle
+    * @param inputUserId
+    */
+  def RecommendMovies(modle: MatrixFactorizationModel, movieTitle: Map[Int, String], inputUserId: Int) = {
+    val RecommendMovie = modle.recommendUsersForProducts(inputUserId)
+    println("针对用户id：" + inputUserId + "推荐以下电影")
+    RecommendMovie.foreach(
+      r =>
+        println( movieTitle(r._1) + " 评分：" + r._2)
+    )
   }
 }
