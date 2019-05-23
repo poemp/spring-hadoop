@@ -12,6 +12,7 @@
         <module>hadoop-ufo-chain-counting</module>
         <module>hadoop-meltiple-input</module>
         <module>spark-movielens</module>
+        <module>spark-movie-commend</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

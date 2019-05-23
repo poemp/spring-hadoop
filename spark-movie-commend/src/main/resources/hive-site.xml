@@ -1,0 +1,8 @@
+  <configuration>
+    
+    <property>
+      <name>hive.metastore.uris</name>
+      <value>thrift://dataxone-cdh1:9083</value>
+    </property>
+    
+  </configuration>
