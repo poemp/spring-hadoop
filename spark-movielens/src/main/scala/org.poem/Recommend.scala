@@ -9,19 +9,23 @@ import org.apache.spark.rdd.RDD
 class Recommend {
 
   def setLogger = {
-    Logger.getLogger("org").setLevel(Level.OFF)
-    Logger.getLogger("com").setLevel(Level.OFF)
+    Logger.getLogger("org").setLevel(Level.WARNING)
+    Logger.getLogger("com").setLevel(Level.WARNING)
     System.setProperty("spark.ui.showConsoleProgress", "false")
-    Logger.getGlobal.setLevel(Level.OFF)
+    Logger.getGlobal.setLevel(Level.WARNING)
+    Logger.getAnonymousLogger.setLevel(Level.WARNING)
+    Logger.getLogger("org").setLevel(Level.WARNING)
+    Logger.getLogger("org.apache.spark").setLevel(Level.WARNING)
+    Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.WARNING)
   }
 
   /**
     * 推荐代码
     *
-    * @param modle
+    * @param model
     * @param movieTitle
     */
-  def recommend(modle: MatrixFactorizationModel, movieTitle: Map[Int, String]): Unit = {
+  def recommend(model: MatrixFactorizationModel, movieTitle: Map[Int, String]): Unit = {
     setLogger
     var choose = ""
     while (choose != "3") {
@@ -29,11 +33,11 @@ class Recommend {
       if (choose == "1") {
         println("请输入用户id:")
         val inputUserId = scala.io.StdIn.readLine()
-        //RecommendMovies(modle, movieTitle, inputUserId.toInt)
+        RecommendMovies(model, movieTitle, inputUserId.toInt)
       } else if (choose == "2") {
         println("请输入电影的id:")
         val inputMovieId = scala.io.StdIn.readLine()
-        //RecommonUsers(modle, movieTitle, inputMovieId.toInt)
+        RecommonUsers(model, movieTitle, inputMovieId.toInt)
       }
     }
   }
@@ -46,6 +50,7 @@ class Recommend {
   def PrepareData(): (RDD[Rating], Map[Int, String]) = {
     // ---------------- 1. 创建用户评分数据 --------------
     val sc = new SparkContext(new SparkConf().setAppName("wordCount").setMaster("local[4]"))
+    sc.setLogLevel("WARN")
     println("开始读取文件")
     //UserID::Gender::Age::Occupation::Zip-code
     val rowUserData = sc.textFile("/root/workspace/recommend/data/ml-1m/users.dat")
@@ -65,7 +70,7 @@ class Recommend {
     val numRatings = rawRatings.count()
     val numUsers = rawRatings.map(_.user).distinct().count()
     val numMovies = rawRatings.map(_.product).distinct().count()
-    println(" 共计：" + numRatings.toString + " user: " + numUsers.toString + "movies:" + numMovies)
+    println(" 共计：" + numRatings.toString + " user: " + numUsers.toString + "\tmovies:" + numMovies)
     (rawRatings, moviesRDD)
   }
 
@@ -73,16 +78,32 @@ class Recommend {
   /**
     * 推荐电影
     *
-    * @param modle
+    * @param model
     * @param movieTitle
     * @param inputUserId
     */
-  def RecommendMovies(modle: MatrixFactorizationModel, movieTitle: Map[Int, String], inputUserId: Int) = {
-    val RecommendMovie = modle.recommendUsersForProducts(inputUserId)
+  def RecommendMovies(model: MatrixFactorizationModel, movieTitle: Map[Int, String], inputUserId: Int) = {
+    val RecommendMovie = model.recommendUsersForProducts(inputUserId).take(10)
     println("针对用户id：" + inputUserId + "推荐以下电影")
     RecommendMovie.foreach(
       r =>
-        println( movieTitle(r._1) + " 评分：" + r._2)
+        println(movieTitle(r._1) + " 评分：" + r._2.take(0))
+    )
+  }
+
+  /**
+    * 推荐电影给用户
+    *
+    * @param model
+    * @param movieTitle
+    * @param inputMovieId
+    */
+  def RecommonUsers(model: MatrixFactorizationModel, movieTitle: Map[Int, String], inputMovieId: Int) = {
+    val RecommendUser = model.recommendProductsForUsers(inputMovieId).take(10)
+    println("针对电影id：" + inputMovieId + "推荐以下电影")
+    RecommendUser.foreach(
+      r =>
+        println("用户：" + r._1 + " 评分:" + r._2.take(0))
     )
   }
 }

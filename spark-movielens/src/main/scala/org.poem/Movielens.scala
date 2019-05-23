@@ -6,7 +6,7 @@ import org.apache.spark.mllib.recommendation.{ALS, MatrixFactorizationModel, Rat
 import org.apache.spark.{SparkConf, SparkContext}
 
 object Movielens {
-  
+
 
   def setLogger = {
     Logger.getLogger("org").setLevel(Level.OFF)
@@ -14,9 +14,9 @@ object Movielens {
     System.setProperty("spark.ui.showConsoleProgress", "false")
     Logger.getGlobal.setLevel(Level.OFF)
   }
-  
-  def main(args: Array[String]): Unit = {
 
+  def movieMain(): Unit = {
+    setLogger
     System.setProperty("spark.ui.showConsoleProgress", "false")
     println(" start Spark Application")
     val sc = new SparkContext(new SparkConf().setAppName("wordCount").setMaster("local[4]"))
@@ -49,5 +49,15 @@ object Movielens {
         (o._1, movieTitle(o._1))
 
     ).foreach(o => println(o._2))
+  }
+
+  Logger.getLogger("org").setLevel(Level.OFF)
+
+  def main(args: Array[String]): Unit = {
+    val r = new Recommend
+    r.setLogger
+    val result = r.PrepareData()
+    val model: MatrixFactorizationModel = ALS.train(result._1, 10, 10, 0.1D)
+    r.recommend(model,result._2)
   }
 }
