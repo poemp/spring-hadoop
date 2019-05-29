@@ -2,7 +2,7 @@ package org.poem.dataframe
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Row, SparkSession}
+import org.apache.spark.sql.{DataFrame, Row, SaveMode, SparkSession}
 
 class Main_Love_DataFrame {
 
@@ -33,7 +33,10 @@ class Main_Love_DataFrame {
 
     // 使用SparkSession 的 CreateDataFrame 方法 ， 结合Row 和StrunctType的元数据信息
     // 基于 RDD 创建DataFrame ， 这时 RDD 就有了元数据信息的描述
-    spark.createDataFrame(userRDDRows, schemaForUsers)
+    val d : DataFrame =  spark.createDataFrame(userRDDRows, schemaForUsers)
+    println("write data to hive : default.user")
+    //d.write.mode(SaveMode.Overwrite).saveAsTable("default.user")
+    d
   }
 
   /**
@@ -62,7 +65,10 @@ class Main_Love_DataFrame {
 
     // 使用SparkSession 的 CreateDataFrame 方法 ， 结合Row 和StrunctType的元数据信息
     // 基于 RDD 创建DataFrame ， 这时 RDD 就有了元数据信息的描述
-    spark.createDataFrame(ratingRDDRows, schemaForratings)
+    val d : DataFrame = spark.createDataFrame(ratingRDDRows, schemaForratings)
+    println("write data to hive : default.ratings")
+    //d.write.mode(SaveMode.Overwrite).saveAsTable("default.ratings")
+    d
   }
 
   /**
@@ -86,7 +92,10 @@ class Main_Love_DataFrame {
         line =>
           Row(line(0).toString, line(1).toString, line(2).toString, line(3).toString)
       )
-    spark.createDataFrame(ratingRDDRows, schemaForratings)
+    val d : DataFrame = spark.createDataFrame(ratingRDDRows, schemaForratings)
+    println("write data to hive : default.movie")
+    //d.write.mode(SaveMode.Overwrite).saveAsTable("default.movie")
+    d
   }
 
   /**
@@ -100,12 +109,12 @@ class Main_Love_DataFrame {
     //UserID::Gender::Age::Occupation::Zip-code
     val userDataFrame: DataFrame = Create_User_DataFrame(usersRDD, spark)
     //MovieID::Title::Genres
-    val moviesDDataFrame: DataFrame = Create_Movies_DataFrame(moviesRDD, spark)
+    val moviesDataFrame: DataFrame = Create_Movies_DataFrame(moviesRDD, spark)
     //UserID::MovieID::Rating::Timestamp
     val ratingsDataFrame: DataFrame = Create_Ratings_DataFrame(ratingsRDD, spark)
 
     // 直接通过列明 MovieId 为1193 过滤电影
-    ratingsDataFrame.filter(" MovieID = 1193 ")
+    ratingsDataFrame.filter(" MovieID='1193' ")
       //join 的时候 指定基于UserID进行Join， 对于原生的RDD操作而言更加方便快捷
       .join(userDataFrame, "UserID")
       //使用元数据信息中的Gender 和Age 进行数据的帅选
