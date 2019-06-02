@@ -61,6 +61,7 @@ object RDD_Movie_Users_Analyzer {
     new Print_Movie_Top_10().Print_Top_10(ratingsRDD, moviesRDD)
     new Main_Love_Movie_Top_10().Main_Movie_Top(ratingsRDD, moviesRDD, usersRDD)
     new Main_Love_DataFrame().Main_Movie_Top(ratingsRDD, moviesRDD, usersRDD, spark)
+    new Main_Love_DataFrame().Main_Movie_DataFrame_Table(ratingsRDD, moviesRDD, usersRDD, spark)
     New_Sort(ratingsRDD)
     // 关闭sparkSession
     spark.close()

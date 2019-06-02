@@ -2,7 +2,7 @@ package org.poem.dataframe
 
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types.{StringType, StructField, StructType}
-import org.apache.spark.sql.{DataFrame, Row, SaveMode, SparkSession}
+import org.apache.spark.sql.{DataFrame, Row, SparkSession}
 
 class Main_Love_DataFrame {
 
@@ -27,14 +27,17 @@ class Main_Love_DataFrame {
     //然后把我么的每一条数据变成row
     val userRDDRows = usersRDD
       .map(
-        line =>
-          Row(line(0).toString, line(1).toString, line(2).toString, line(3).toString, line(4).toString)
+        line =>{
+          val newLine = line.split("::")
+          Row(newLine(0), newLine(1), newLine(2), newLine(3), newLine(4))
+        }
       )
 
     // 使用SparkSession 的 CreateDataFrame 方法 ， 结合Row 和StrunctType的元数据信息
     // 基于 RDD 创建DataFrame ， 这时 RDD 就有了元数据信息的描述
-    val d : DataFrame =  spark.createDataFrame(userRDDRows, schemaForUsers)
-    println("write data to hive : default.user")
+    val d: DataFrame = spark.createDataFrame(userRDDRows, schemaForUsers)
+    println("default.user\n")
+    //d.show(10)
     //d.write.mode(SaveMode.Overwrite).saveAsTable("default.user")
     d
   }
@@ -59,14 +62,17 @@ class Main_Love_DataFrame {
     //然后把我么的每一条数据变成row
     val ratingRDDRows = ratingsRDD
       .map(
-        line =>
-          Row(line(0).toString, line(1).toString, line(2).toString, line(3).toString, line(4).toString)
+        line =>{
+          val newLine = line.split("::")
+          Row(newLine(0), newLine(1), newLine(2), newLine(3))
+        }
       )
 
     // 使用SparkSession 的 CreateDataFrame 方法 ， 结合Row 和StrunctType的元数据信息
     // 基于 RDD 创建DataFrame ， 这时 RDD 就有了元数据信息的描述
-    val d : DataFrame = spark.createDataFrame(ratingRDDRows, schemaForratings)
-    println("write data to hive : default.ratings")
+    val d: DataFrame = spark.createDataFrame(ratingRDDRows, schemaForratings)
+    println("default.ratings:\n")
+    //d.show(10)
     //d.write.mode(SaveMode.Overwrite).saveAsTable("default.ratings")
     d
   }
@@ -89,11 +95,14 @@ class Main_Love_DataFrame {
 
     val ratingRDDRows = moviesRDD
       .map(
-        line =>
-          Row(line(0).toString, line(1).toString, line(2).toString, line(3).toString)
+        line =>{
+          val newLine = line.split("::")
+          Row(newLine(0), newLine(1), newLine(2))
+        }
       )
-    val d : DataFrame = spark.createDataFrame(ratingRDDRows, schemaForratings)
-    println("write data to hive : default.movie")
+    val d: DataFrame = spark.createDataFrame(ratingRDDRows, schemaForratings)
+    println("default.movie\n")
+    //d.show(10)
     //d.write.mode(SaveMode.Overwrite).saveAsTable("default.movie")
     d
   }
@@ -123,5 +132,31 @@ class Main_Love_DataFrame {
       .groupBy("Gender", "Age")
       // 基于 groupBy 分组信息进行count统计操作，并显示出分组统计后的前10条信息
       .count().show(10)
+  }
+
+  /**
+    * 注册成表
+    *
+    * @param ratingsRDD
+    * @param moviesRDD
+    * @param usersRDD
+    * @param spark
+    */
+  def Main_Movie_DataFrame_Table(ratingsRDD: RDD[String], moviesRDD: RDD[String], usersRDD: RDD[String], spark: SparkSession): Unit = {
+    println("\n功能一：通过LocalTempView实现某部电影观看者中不同年龄和不同性别有多少人")
+
+    //UserID::MovieID::Rating::Timestamp
+    val ratingsDataFrame: DataFrame = Create_Ratings_DataFrame(ratingsRDD, spark)
+    ratingsDataFrame.createTempView("ratings")
+
+    //UserID::Gender::Age::Occupation::Zip-code
+    val userDataFrame: DataFrame = Create_User_DataFrame(usersRDD, spark)
+    userDataFrame.createTempView("users")
+
+
+    val sql: String = s"SELECT users.Gender, users.Age , count(1) as counts from users join ratings on users.UserID = ratings.UserID group by  users.Gender, users.Age ORDER BY counts asc  "
+    val sqlDataFrame: DataFrame = spark.sql(sql)
+
+    sqlDataFrame.show(10)
   }
 }
