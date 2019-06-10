@@ -4,6 +4,7 @@ import org.apache.spark.SparkConf
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SparkSession
 import org.poem.dataframe.Main_Love_DataFrame
+import org.poem.dataset.Main_Love_DataSet
 import org.poem.ddr.{Main_Love_Movie_Top_10, Print_Movie_Top_10}
 import org.poem.sort.Second_Sort_Key
 
@@ -62,6 +63,7 @@ object RDD_Movie_Users_Analyzer {
     new Main_Love_Movie_Top_10().Main_Movie_Top(ratingsRDD, moviesRDD, usersRDD)
     new Main_Love_DataFrame().Main_Movie_Top(ratingsRDD, moviesRDD, usersRDD, spark)
     new Main_Love_DataFrame().Main_Movie_DataFrame_Table(ratingsRDD, moviesRDD, usersRDD, spark)
+    new Main_Love_DataSet().Main_Movie_Top(ratingsRDD,usersRDD, spark)
     New_Sort(ratingsRDD)
     // 关闭sparkSession
     spark.close()
