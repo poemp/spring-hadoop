@@ -13,6 +13,7 @@
         <module>hadoop-meltiple-input</module>
         <module>spark-movielens</module>
         <module>spark-movie-commend</module>
+        <module>spark-structured-streaming</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
