@@ -135,6 +135,8 @@ class Main_Love_DataFrame {
   }
 
   /**
+    * RDD 的cache 等于 MEMORY_ONLY
+    * DataSet 的 cache 是 MEMORY_AND_DISK
     * 注册成表
     *
     * @param ratingsRDD
