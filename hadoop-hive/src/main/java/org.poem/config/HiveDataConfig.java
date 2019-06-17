@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class HiveDataConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(HiveDataConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger( HiveDataConfig.class );
 
     @Value("${hive.url}")
     private String url;
@@ -32,11 +32,11 @@ public class HiveDataConfig {
 
     @Bean
     public DataBaseInter getDataBaseS() {
-        logger.info(String.format("init hive databases - \n\t\turl:%s, " +
+        logger.info( String.format( "init hive databases - \n\t\turl:%s, " +
                 "\n\t\tuserName:%s, " +
                 "\n\t\tpassword:%s, " +
-                "\n\t\tdrive:%s" , url, userName, password, driver));
-        return new AbstractDataBaseInter(new DateBaseConfig() {
+                "\n\t\tdrive:%s", url, userName, password, driver ) );
+        return new AbstractDataBaseInter( new DateBaseConfig() {
             @Override
             public String getDriveName() {
                 return driver;
@@ -56,7 +56,7 @@ public class HiveDataConfig {
             public String getUrl() {
                 return url;
             }
-        });
+        } );
     }
 
     public String getUrl() {

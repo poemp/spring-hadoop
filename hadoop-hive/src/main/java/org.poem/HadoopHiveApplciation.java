@@ -10,6 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class HadoopHiveApplciation {
 
     public static void main(String[] args) {
-        SpringApplication.run(HadoopHiveApplciation.class,args);
+        SpringApplication.run( HadoopHiveApplciation.class, args );
     }
 }

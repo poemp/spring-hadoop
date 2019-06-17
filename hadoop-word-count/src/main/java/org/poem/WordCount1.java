@@ -19,15 +19,15 @@ public class WordCount1 {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration configuration = new Configuration();
-        Job job = new Job(configuration, "word count");
-        job.setJarByClass(WordCount1.class);
-        job.setMapperClass(WordCountMapper.class);
-        job.setReducerClass(WordCountReducer.class);
-        job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(IntWritable.class);
-        FileInputFormat.addInputPath(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        Job job = new Job( configuration, "word count" );
+        job.setJarByClass( WordCount1.class );
+        job.setMapperClass( WordCountMapper.class );
+        job.setReducerClass( WordCountReducer.class );
+        job.setOutputKeyClass( Text.class );
+        job.setOutputValueClass( IntWritable.class );
+        FileInputFormat.addInputPath( job, new Path( args[0] ) );
+        FileOutputFormat.setOutputPath( job, new Path( args[1] ) );
+        System.exit( job.waitForCompletion( true ) ? 0 : 1 );
     }
 
     public static class WordCountMapper extends Mapper<Object, Text, Text, IntWritable> {
@@ -38,10 +38,10 @@ public class WordCount1 {
 
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            String[] words = value.toString().split("");
+            String[] words = value.toString().split( "" );
             for (String str : words) {
-                word.set(str);
-                context.write(word, one);
+                word.set( str );
+                context.write( word, one );
             }
         }
     }
@@ -53,7 +53,7 @@ public class WordCount1 {
             for (IntWritable val : values) {
                 total++;
             }
-            context.write(key, new IntWritable(total));
+            context.write( key, new IntWritable( total ) );
         }
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.UUID;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,17 +30,17 @@ public class AbstractDataBaseInterTest {
         PreparedStatement statement = null;
         String tableName = "sort_cols_1555054428609";
         try {
-            String sql = "CREATE TABLE " + tableName +"(\n" +
-                   "SD_ID int  NOT NULL comment 'test' \n" +
-                   ")";
+            String sql = "CREATE TABLE " + tableName + "(\n" +
+                    "SD_ID int  NOT NULL comment 'test' \n" +
+                    ")";
 //            statement = connection.prepareStatement(sql);
 //           boolean r = statement.execute();
 //           System.out.println(r);
 
 //            for (int i = 0; i < 1000; i++) {
             sql = "INSERT INTO " + tableName + " VALUES (" + 9999991 + ")";
-            System.out.println(sql);
-            statement = connection.prepareStatement(sql);
+            System.out.println( sql );
+            statement = connection.prepareStatement( sql );
             statement.executeUpdate();
 //            }
 

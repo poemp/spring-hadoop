@@ -18,9 +18,9 @@ import java.sql.SQLException;
  * 获取数据库
  * 并且获取数据库表
  */
-public  class AbstractDataBaseInter implements DataBaseInter {
+public class AbstractDataBaseInter implements DataBaseInter {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractDataBaseInter.class);
+    private static final Logger logger = LoggerFactory.getLogger( AbstractDataBaseInter.class );
     /**
      * 获取数据
      */
@@ -30,18 +30,19 @@ public  class AbstractDataBaseInter implements DataBaseInter {
 
     /**
      * 配置
+     *
      * @param dateBaseConfig
      */
     public AbstractDataBaseInter(DateBaseConfig dateBaseConfig) {
-        Assert.notNull(dateBaseConfig, "配置不能为空");
-        if (StringUtils.isEmpty(dateBaseConfig.getDriveName())){
-            throw new IllegalArgumentException("DriveName Not Null");
+        Assert.notNull( dateBaseConfig, "配置不能为空" );
+        if (StringUtils.isEmpty( dateBaseConfig.getDriveName() )) {
+            throw new IllegalArgumentException( "DriveName Not Null" );
         }
-        if (StringUtils.isEmpty(dateBaseConfig.getUrl())){
-            throw new IllegalArgumentException("Url  Not Null");
+        if (StringUtils.isEmpty( dateBaseConfig.getUrl() )) {
+            throw new IllegalArgumentException( "Url  Not Null" );
         }
-        if (StringUtils.isEmpty(dateBaseConfig.getUserName())){
-            throw new IllegalArgumentException("User Name Not Null");
+        if (StringUtils.isEmpty( dateBaseConfig.getUserName() )) {
+            throw new IllegalArgumentException( "User Name Not Null" );
         }
         this.dateBaseConfig = dateBaseConfig;
     }
@@ -52,20 +53,20 @@ public  class AbstractDataBaseInter implements DataBaseInter {
     @Override
     public Connection getConnect() {
         try {
-            Class.forName(dateBaseConfig.getDriveName());
-            logger.info(String.format("init database info: url:%s, user:%s, password:%s",
-                    dateBaseConfig.getUrl(),dateBaseConfig.getUserName(),dateBaseConfig.getPassword()));
-            this.connection = DriverManager.getConnection(dateBaseConfig.getUrl(), dateBaseConfig.getUserName(), dateBaseConfig.getPassword());
+            Class.forName( dateBaseConfig.getDriveName() );
+            logger.info( String.format( "init database info: url:%s, user:%s, password:%s",
+                    dateBaseConfig.getUrl(), dateBaseConfig.getUserName(), dateBaseConfig.getPassword() ) );
+            this.connection = DriverManager.getConnection( dateBaseConfig.getUrl(), dateBaseConfig.getUserName(), dateBaseConfig.getPassword() );
             return connection;
         } catch (ClassNotFoundException e) {
-            logger.error(e.getMessage(), e);
+            logger.error( e.getMessage(), e );
             e.printStackTrace();
         } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
+            logger.error( e.getMessage(), e );
             e.printStackTrace();
         }
-        if (this.connection == null){
-            throw new IllegalArgumentException("The Connect Is Null.");
+        if (this.connection == null) {
+            throw new IllegalArgumentException( "The Connect Is Null." );
         }
         return connection;
     }
@@ -79,7 +80,7 @@ public  class AbstractDataBaseInter implements DataBaseInter {
         try {
             schema = connection.getSchema();
         } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
+            logger.error( e.getMessage(), e );
             e.printStackTrace();
         }
         return schema;
@@ -94,12 +95,12 @@ public  class AbstractDataBaseInter implements DataBaseInter {
     @Override
     public void close() throws IOException {
         if (connection != null) {
-            logger.info("Database - Closed Connection . ");
+            logger.info( "Database - Closed Connection . " );
             try {
                 connection.isClosed();
                 connection.close();
             } catch (SQLException e) {
-                logger.error(e.getMessage(), e);
+                logger.error( e.getMessage(), e );
                 e.printStackTrace();
             }
         }

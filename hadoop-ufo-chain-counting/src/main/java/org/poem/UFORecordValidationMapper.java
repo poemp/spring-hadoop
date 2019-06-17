@@ -16,12 +16,13 @@ public class UFORecordValidationMapper extends MapReduceBase implements Mapper<L
     @Override
     public void map(LongWritable longWritable, Text text, OutputCollector<LongWritable, Text> outputCollector, Reporter reporter) throws IOException {
         String line = text.toString();
-        if (validate(line)){
-            outputCollector.collect(longWritable, text);
+        if (validate( line )) {
+            outputCollector.collect( longWritable, text );
         }
     }
-    private boolean validate(String str){
-        String[] parts = str.split("\t");
+
+    private boolean validate(String str) {
+        String[] parts = str.split( "\t" );
         return parts.length == 6;
     }
 }
